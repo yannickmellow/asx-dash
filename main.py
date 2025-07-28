@@ -103,10 +103,12 @@ def scan_timeframe(tickers, interval_label, interval):
             df.columns = [c.lower() for c in df.columns]
 
             if interval == '1wk':
-                last_date = df['date'].iloc[-1].date()
-                today = datetime.utcnow().date()
-                if last_date >= today - timedelta(days=today.weekday()):
-                    df = df.iloc[:-1]
+                last_date = df['date'].iloc[-1]
+                if isinstance(last_date, datetime):
+                    last_date = last_date.date()
+            today = datetime.utcnow().date()
+            if last_date >= today - timedelta(days=today.weekday()):
+                df = df.iloc[:-1]
 
             DM9Top, DM13Top, DM9Bot, DM13Bot = compute_dm_signals(df)
 
